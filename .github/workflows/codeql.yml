@@ -19,8 +19,8 @@ jobs:
     # Set job outputs to values from filter step
     outputs:
       fe-frontend: ${{ steps.filter.outputs.fe-frontend }}
-       ms-open: ${{ steps.filter.outputs.ms-open }}
-       ms-closed: ${{ steps.filter.outputs.ms-closed }}
+      ms-open: ${{ steps.filter.outputs.ms-open }}
+      ms-closed: ${{ steps.filter.outputs.ms-closed }}
     steps:
     - name: Checkout
       uses: actions/checkout@v3
