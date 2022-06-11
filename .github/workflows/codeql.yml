@@ -1,0 +1,66 @@
+name: CodeQL
+
+on:
+  push:
+    paths:
+      - 'fe-*/**'
+      - 'ms-*/**'
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+
+    permissions:
+      actions: read
+      contents: read
+
+    # Set job outputs to values from filter step
+    outputs:
+      frontend: ${{ steps.filter.outputs.fe-frontend }}
+      backend1: ${{ steps.filter.outputs.ms-open }}
+      backend2: ${{ steps.filter.outputs.ms-closed }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    # For pull requests it's not necessary to checkout the code
+    - uses: dorny/paths-filter@v2
+      id: filter
+      with:
+        filters: |
+          fe-frontend:
+            - 'fe-frontend/**'
+          ms-open:
+            - 'ms-open/**'
+          ms-closed:
+            - 'ms-closed/**'
+
+  codeql-frontend:
+    needs: [changes]
+    if: ${{ needs.changes.outputs.fe-frontend == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: CodeQL
+        run: |
+          echo "CodeQL"
+
+  codeql-ms-open:
+    needs: [changes]
+    if: ${{ needs.changes.outputs.ms-open == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: CodeQL
+        run: |
+          echo "CodeQL"
+
+  codeql-ms-closed:
+    needs: [changes]
+    if: ${{ needs.changes.outputs.ms-closed == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: CodeQL
+        run: |
+          echo "CodeQL"
